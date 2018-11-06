@@ -1,0 +1,874 @@
+hassan@hassan-laptop:~/catkin_ws$ roslaunch ratslam_ros agnostobot.launch
+... logging to /home/hassan/.ros/log/c659dbee-e126-11e8-ae2b-74e5f9f5327d/roslaunch-hassan-laptop-30994.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+
+started roslaunch server http://192.168.0.180:35431/
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.13
+ * /stereo_odometer/bucket_height: 50
+ * /stereo_odometer/bucket_width: 50
+ * /stereo_odometer/half_resolution: 1
+ * /stereo_odometer/inlier_threshold: 1.5
+ * /stereo_odometer/match_binsize: 50
+ * /stereo_odometer/match_disp_tolerance: 2
+ * /stereo_odometer/match_radius: 200
+ * /stereo_odometer/max_features: 2
+ * /stereo_odometer/multi_stage: 1
+ * /stereo_odometer/nms_n: 3
+ * /stereo_odometer/nms_tau: 50
+ * /stereo_odometer/outlier_disp_tolerance: 5
+ * /stereo_odometer/outlier_flow_tolerance: 5
+ * /stereo_odometer/queue_size: 100
+ * /stereo_odometer/ransac_iters: 200
+ * /stereo_odometer/ref_frame_change_method: 0
+ * /stereo_odometer/ref_frame_inlier_threshold: 150
+ * /stereo_odometer/ref_frame_motion_threshold: 5
+ * /stereo_odometer/refinement: 1
+ * /stereo_odometer/reweighting: 1
+ * /use_sim_time: False
+
+NODES
+  /rectify/
+    stereo_image_proc (stereo_image_proc/stereo_image_proc)
+  /
+    RatSLAMExperienceMap (ratslam_ros/ratslam_em)
+    RatSLAMLocalViewCells (ratslam_ros/ratslam_lv)
+    RatSLAMPoseCells (ratslam_ros/ratslam_pc)
+    left_camera_tf_broadcaster (tf/static_transform_publisher)
+    plot_vt_em (rqt_plot/rqt_plot)
+    record (rosbag/record)
+    rectified_image_and_camera_info_message_synchronizer (message_synchronizer/image_and_camera_info_message_synchronizer)
+    republish_left (image_transport/republish)
+    republish_right (image_transport/republish)
+    right_camera_tf_broadcaster (tf/static_transform_publisher)
+    stereo_odometer (viso2_ros/stereo_odometer)
+
+ROS_MASTER_URI=http://192.168.0.180:11311
+
+process[left_camera_tf_broadcaster-1]: started with pid [31011]
+process[right_camera_tf_broadcaster-2]: started with pid [31012]
+process[republish_left-3]: started with pid [31018]
+process[republish_right-4]: started with pid [31031]
+process[rectify/stereo_image_proc-5]: started with pid [31038]
+process[rectified_image_and_camera_info_message_synchronizer-6]: started with pid [31052]
+process[stereo_odometer-7]: started with pid [31063]
+process[RatSLAMLocalViewCells-8]: started with pid [31074]
+process[RatSLAMPoseCells-9]: started with pid [31088]
+process[RatSLAMExperienceMap-10]: started with pid [31096]
+process[plot_vt_em-11]: started with pid [31097]
+process[record-12]: started with pid [31105]
+GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from /home/hassan/catkin_ws/devel/lib/viso2_ros/stereo_odometer...(no debugging symbols found)...done.
+Starting program: /home/hassan/catkin_ws/devel/lib/viso2_ros/stereo_odometer image:=image_rect __name:=stereo_odometer __log:=/home/hassan/.ros/log/c659dbee-e126-11e8-ae2b-74e5f9f5327d/stereo_odometer-7.log
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[ WARN] [1541531314.877962529]: 'stereo' has not been remapped! Example command-line usage:
+	$ rosrun viso2_ros stereo_odometer stereo:=narrow_stereo image:=image_rect
+[New Thread 0x7fffe923e700 (LWP 31895)]
+[New Thread 0x7fffe8a3d700 (LWP 31896)]
+[New Thread 0x7fffe3fff700 (LWP 31897)]
+[New Thread 0x7fffe37fe700 (LWP 31903)]
+[ INFO] [1541531314.882339523]: Subscribing to:
+	* /stereo/left/image_rect
+	* /stereo/right/image_rect
+	* /stereo/left/camera_info
+	* /stereo/right/camera_info
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[tcsetpgrp failed in terminal_inferior: Inappropriate ioctl for device]
+[New Thread 0x7fffe27a3700 (LWP 31952)]
+[New Thread 0x7fffe1fa2700 (LWP 31968)]
+[ INFO] [1541531314.942946597]: Basic Odometer Settings:
+  odom_frame_id      = /odom
+  base_link_frame_id = /base_link
+  publish_tf         = true
+  invert_tf          = false
+[ INFO] [1541531315.173482601]: Initialized libviso2 stereo odometry with the following parameters:
+Calibration parameters:
+  f  = 626.822
+  cu = 345.305
+  cv = 241.251
+Matcher parameters:
+  nms_n                  = 3
+  nms_tau                = 50
+  match_binsize          = 50
+  match_radius           = 200
+  match_disp_tolerance   = 2
+  outlier_disp_tolerance = 5
+  outlier_flow_tolerance = 5
+  multi_stage            = 1
+  half_resolution        = 1
+  refinement             = 1
+Bucketing parameters:
+  max_features  = 2
+  bucket_width  = 50
+  bucket_height = 50
+Stereo odometry parameters:
+  base             = 0.166402
+  ransac_iters     = 200
+  inlier_threshold = 1.5
+  reweighting      = 1
+  queue_size = 100
+  approximate_sync = 0
+  ref_frame_change_method = 0
+  ref_frame_motion_threshold = 5
+  ref_frame_inlier_threshold = 150
+[ WARN] [1541531315.218447260]: The tf from '/base_link' to '/agnostobot_left_camera' does not seem to be available, will assume it as identity!
+[DEBUG] [1541531319.532832066]: Connection::drop(2)
+[DEBUG] [1541531319.532914617]: TCP socket [13] closed
+[DEBUG] [1541531319.532950250]: Connection::drop(0)
+[DEBUG] [1541531319.532979930]: Connection::drop(2)
+[DEBUG] [1541531319.533012192]: Connection::drop(2)
+[DEBUG] [1541531319.628105653]: Found 56 matches with 14 inliers.
+[DEBUG] [1541531319.628230910]: libviso2 returned the following motion:
+   0.9999994    0.0010918    0.0000745    0.0000727 
+  -0.0010919    0.9999991    0.0007614    0.0000239 
+  -0.0000737   -0.0007615    0.9999997    0.0035060 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531319.628353318]: Changing reference frame
+[DEBUG] [1541531319.727339244]: Found 53 matches with 18 inliers.
+[DEBUG] [1541531319.727375378]: libviso2 returned the following motion:
+   0.9999961    0.0023786    0.0014552   -0.0025698 
+  -0.0023844    0.9999892    0.0039848   -0.0025131 
+  -0.0014457   -0.0039883    0.9999910    0.0066618 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531319.727589978]: Changing reference frame
+[DEBUG] [1541531319.826353387]: Found 59 matches with 21 inliers.
+[DEBUG] [1541531319.826397157]: libviso2 returned the following motion:
+   0.9999990   -0.0008815   -0.0011281    0.0018588 
+   0.0008813    0.9999996   -0.0001248    0.0009857 
+   0.0011282    0.0001238    0.9999994   -0.0049740 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531319.826475570]: Changing reference frame
+[DEBUG] [1541531319.933031338]: Found 45 matches with 17 inliers.
+[DEBUG] [1541531319.933067858]: libviso2 returned the following motion:
+   0.9999998    0.0004545    0.0003792   -0.0006612 
+  -0.0004556    0.9999960    0.0027810   -0.0016308 
+  -0.0003779   -0.0027811    0.9999961    0.0024045 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531319.933124262]: Changing reference frame
+[DEBUG] [1541531320.048081555]: Found 48 matches with 16 inliers.
+[DEBUG] [1541531320.048132248]: libviso2 returned the following motion:
+   0.9999857   -0.0053502    0.0002291    0.0012661 
+   0.0053502    0.9999857    0.0001936    0.0001096 
+  -0.0002301   -0.0001923    1.0000000   -0.0000228 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.048199647]: Changing reference frame
+[DEBUG] [1541531320.140392633]: Found 42 matches with 17 inliers.
+[DEBUG] [1541531320.140432776]: libviso2 returned the following motion:
+   0.9999947   -0.0032265    0.0003171    0.0005960 
+   0.0032270    0.9999938   -0.0013987    0.0032266 
+  -0.0003126    0.0013998    0.9999990   -0.0003201 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.140567521]: Changing reference frame
+[DEBUG] [1541531320.238715693]: Found 55 matches with 25 inliers.
+[DEBUG] [1541531320.238769199]: libviso2 returned the following motion:
+   0.9999998    0.0004137    0.0004263   -0.0007754 
+  -0.0004151    0.9999945    0.0032944   -0.0024206 
+  -0.0004250   -0.0032946    0.9999945    0.0036669 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.238930354]: Changing reference frame
+[DEBUG] [1541531320.333516450]: Found 50 matches with 21 inliers.
+[DEBUG] [1541531320.333568634]: libviso2 returned the following motion:
+   0.9999974    0.0019459    0.0011910   -0.0019573 
+  -0.0019471    0.9999976    0.0010277    0.0014212 
+  -0.0011890   -0.0010300    0.9999988    0.0028346 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.333651280]: Changing reference frame
+[DEBUG] [1541531320.425771284]: Found 44 matches with 17 inliers.
+[DEBUG] [1541531320.425822685]: libviso2 returned the following motion:
+   0.9999897   -0.0044870    0.0007294    0.0004915 
+   0.0044871    0.9999899   -0.0001853    0.0009451 
+  -0.0007285    0.0001885    0.9999997    0.0029768 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.425985600]: Changing reference frame
+[DEBUG] [1541531320.527792112]: Found 46 matches with 18 inliers.
+[DEBUG] [1541531320.527840608]: libviso2 returned the following motion:
+   0.9999977   -0.0021295   -0.0003889    0.0010934 
+   0.0021297    0.9999976    0.0005308   -0.0000663 
+   0.0003878   -0.0005317    0.9999998   -0.0011032 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.527972749]: Changing reference frame
+[DEBUG] [1541531320.627441418]: Found 60 matches with 20 inliers.
+[DEBUG] [1541531320.627505451]: libviso2 returned the following motion:
+   0.9999889    0.0043677   -0.0017543    0.0018777 
+  -0.0043644    0.9999887    0.0019020   -0.0010747 
+   0.0017626   -0.0018943    0.9999967   -0.0009786 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.627604011]: Changing reference frame
+[DEBUG] [1541531320.729717928]: Found 49 matches with 18 inliers.
+[DEBUG] [1541531320.729772909]: libviso2 returned the following motion:
+   0.9999962   -0.0026836   -0.0007044    0.0017127 
+   0.0026850    0.9999945    0.0019296   -0.0034770 
+   0.0006992   -0.0019315    0.9999979   -0.0026179 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.729937473]: Changing reference frame
+[DEBUG] [1541531320.824788780]: Found 56 matches with 20 inliers.
+[DEBUG] [1541531320.824859021]: libviso2 returned the following motion:
+   0.9999986    0.0017000    0.0000602   -0.0007587 
+  -0.0017001    0.9999931    0.0033164   -0.0022125 
+  -0.0000546   -0.0033165    0.9999945    0.0022923 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.824938065]: Changing reference frame
+[DEBUG] [1541531320.926839598]: Found 42 matches with 19 inliers.
+[DEBUG] [1541531320.926873620]: libviso2 returned the following motion:
+   1.0000000   -0.0000389    0.0000914   -0.0001032 
+   0.0000388    0.9999998    0.0007058    0.0008543 
+  -0.0000914   -0.0007058    0.9999997    0.0003963 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531320.927049666]: Changing reference frame
+[DEBUG] [1541531321.018388255]: Found 49 matches with 18 inliers.
+[DEBUG] [1541531321.018430458]: libviso2 returned the following motion:
+   1.0000000    0.0001430   -0.0000820    0.0000765 
+  -0.0001429    0.9999986    0.0016906   -0.0004077 
+   0.0000822   -0.0016906    0.9999986    0.0004451 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.018509335]: Changing reference frame
+[DEBUG] [1541531321.124023397]: Found 48 matches with 20 inliers.
+[DEBUG] [1541531321.124058702]: libviso2 returned the following motion:
+   0.9999923    0.0039222    0.0001322   -0.0013757 
+  -0.0039227    0.9999844    0.0039805   -0.0035317 
+  -0.0001166   -0.0039809    0.9999921    0.0059326 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.124179014]: Changing reference frame
+[DEBUG] [1541531321.223046700]: Found 60 matches with 23 inliers.
+[DEBUG] [1541531321.223088935]: libviso2 returned the following motion:
+   0.9999995    0.0006926    0.0007109   -0.0010664 
+  -0.0006947    0.9999956    0.0028776   -0.0022075 
+  -0.0007089   -0.0028781    0.9999956    0.0022786 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.223184882]: Changing reference frame
+[DEBUG] [1541531321.384204995]: Found 45 matches with 19 inliers.
+[DEBUG] [1541531321.384241669]: libviso2 returned the following motion:
+   1.0000000   -0.0000141    0.0001503   -0.0002771 
+   0.0000139    0.9999988    0.0015236   -0.0001990 
+  -0.0001503   -0.0015236    0.9999988    0.0020217 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.384318114]: Changing reference frame
+[DEBUG] [1541531321.441309564]: Found 52 matches with 23 inliers.
+[DEBUG] [1541531321.441349673]: libviso2 returned the following motion:
+   0.9999994    0.0000529   -0.0010576    0.0014621 
+  -0.0000509    0.9999982    0.0018709   -0.0034683 
+   0.0010577   -0.0018709    0.9999977   -0.0041213 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.441481294]: Changing reference frame
+[DEBUG] [1541531321.522072808]: Found 58 matches with 24 inliers.
+[DEBUG] [1541531321.522108184]: libviso2 returned the following motion:
+   0.9999991    0.0008677   -0.0010004    0.0016299 
+  -0.0008679    0.9999996   -0.0001985    0.0017819 
+   0.0010002    0.0001993    0.9999995   -0.0024332 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.522183951]: Changing reference frame
+[DEBUG] [1541531321.627248923]: Found 44 matches with 19 inliers.
+[DEBUG] [1541531321.627285681]: libviso2 returned the following motion:
+   0.9999989    0.0013015    0.0007192   -0.0012853 
+  -0.0013046    0.9999896    0.0043769   -0.0047665 
+  -0.0007135   -0.0043779    0.9999902    0.0039236 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.627386311]: Changing reference frame
+[DEBUG] [1541531321.726928561]: Found 53 matches with 19 inliers.
+[DEBUG] [1541531321.726969908]: libviso2 returned the following motion:
+   1.0000000    0.0001175   -0.0002734    0.0003098 
+  -0.0001172    0.9999996    0.0009366    0.0007547 
+   0.0002735   -0.0009366    0.9999995    0.0001306 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.727054687]: Changing reference frame
+[DEBUG] [1541531321.820172778]: Found 45 matches with 20 inliers.
+[DEBUG] [1541531321.820223981]: libviso2 returned the following motion:
+   1.0000000    0.0000577    0.0000069   -0.0000177 
+  -0.0000577    0.9999972    0.0023688   -0.0016763 
+  -0.0000067   -0.0023688    0.9999972    0.0005661 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.820308480]: Changing reference frame
+[DEBUG] [1541531321.921401142]: Found 55 matches with 19 inliers.
+[DEBUG] [1541531321.921437526]: libviso2 returned the following motion:
+   0.9999996   -0.0005521   -0.0006761    0.0010792 
+   0.0005537    0.9999973    0.0022755   -0.0030958 
+   0.0006749   -0.0022759    0.9999972   -0.0018236 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531321.921506104]: Changing reference frame
+[DEBUG] [1541531322.030296915]: Found 52 matches with 13 inliers.
+[DEBUG] [1541531322.030354680]: libviso2 returned the following motion:
+   0.9999994   -0.0009294    0.0004945   -0.0004832 
+   0.0009299    0.9999990   -0.0010768    0.0029099 
+  -0.0004935    0.0010773    0.9999993    0.0020909 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.030439715]: Changing reference frame
+[DEBUG] [1541531322.121743983]: Found 65 matches with 29 inliers.
+[DEBUG] [1541531322.121788944]: libviso2 returned the following motion:
+   0.9999998    0.0003707    0.0005661   -0.0008876 
+  -0.0003716    0.9999986    0.0016245   -0.0002377 
+  -0.0005655   -0.0016247    0.9999985    0.0025660 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.121921863]: Changing reference frame
+[DEBUG] [1541531322.230578567]: Found 58 matches with 26 inliers.
+[DEBUG] [1541531322.230636752]: libviso2 returned the following motion:
+   0.9999993   -0.0004567   -0.0011001    0.0017778 
+   0.0004572    0.9999998    0.0004130    0.0001643 
+   0.0010999   -0.0004135    0.9999993   -0.0052970 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.230830535]: Changing reference frame
+[DEBUG] [1541531322.339241515]: Found 48 matches with 18 inliers.
+[DEBUG] [1541531322.339279378]: libviso2 returned the following motion:
+   0.9999996    0.0006666   -0.0006284    0.0003116 
+  -0.0006642    0.9999924    0.0038425   -0.0052739 
+   0.0006310   -0.0038421    0.9999924   -0.0028755 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.339394443]: Changing reference frame
+[DEBUG] [1541531322.430769641]: Found 42 matches with 15 inliers.
+[DEBUG] [1541531322.430806241]: libviso2 returned the following motion:
+   0.9999974    0.0022554   -0.0001713   -0.0004466 
+  -0.0022548    0.9999910    0.0035995   -0.0040651 
+   0.0001794   -0.0035991    0.9999935    0.0009772 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.430927967]: Changing reference frame
+[DEBUG] [1541531322.522846197]: Found 45 matches with 20 inliers.
+[DEBUG] [1541531322.522881147]: libviso2 returned the following motion:
+   0.9999993   -0.0010457    0.0005043   -0.0004485 
+   0.0010457    0.9999995   -0.0000142    0.0018050 
+  -0.0005043    0.0000147    0.9999999    0.0017870 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.522974436]: Changing reference frame
+[DEBUG] [1541531322.620613241]: Found 46 matches with 20 inliers.
+[DEBUG] [1541531322.620654887]: libviso2 returned the following motion:
+   0.9999999   -0.0001544    0.0003186   -0.0009303 
+   0.0001537    0.9999976    0.0022014   -0.0020324 
+  -0.0003189   -0.0022013    0.9999975   -0.0015292 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.620713303]: Changing reference frame
+[DEBUG] [1541531322.720124199]: Found 50 matches with 16 inliers.
+[DEBUG] [1541531322.720164035]: libviso2 returned the following motion:
+   0.9999991    0.0005403    0.0012339   -0.0018399 
+  -0.0005404    0.9999998    0.0001368    0.0029782 
+  -0.0012338   -0.0001375    0.9999992    0.0046860 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.720257669]: Changing reference frame
+[DEBUG] [1541531322.823287335]: Found 58 matches with 19 inliers.
+[DEBUG] [1541531322.823342468]: libviso2 returned the following motion:
+   1.0000000   -0.0000914   -0.0000817    0.0000469 
+   0.0000918    0.9999928    0.0038067   -0.0051501 
+   0.0000814   -0.0038067    0.9999928    0.0007181 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.823442763]: Changing reference frame
+[DEBUG] [1541531322.943585740]: Found 51 matches with 22 inliers.
+[DEBUG] [1541531322.943635797]: libviso2 returned the following motion:
+   0.9999978   -0.0017123    0.0011928   -0.0012219 
+   0.0017100    0.9999968    0.0018793   -0.0015694 
+  -0.0011960   -0.0018773    0.9999975    0.0037035 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531322.943697620]: Changing reference frame
+[DEBUG] [1541531323.021060914]: Found 48 matches with 24 inliers.
+[DEBUG] [1541531323.021115385]: libviso2 returned the following motion:
+   0.9999960    0.0014213   -0.0024656    0.0034342 
+  -0.0014127    0.9999930    0.0034662   -0.0045813 
+   0.0024705   -0.0034627    0.9999910   -0.0055870 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531323.021210249]: Changing reference frame
+[DEBUG] [1541531323.119774152]: Found 56 matches with 21 inliers.
+[DEBUG] [1541531323.119839549]: libviso2 returned the following motion:
+   0.9999999   -0.0004097   -0.0003271    0.0005411 
+   0.0004099    0.9999996    0.0007573    0.0002614 
+   0.0003268   -0.0007575    0.9999997   -0.0018991 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531323.119914107]: Changing reference frame
+[DEBUG] [1541531323.224147306]: Found 51 matches with 26 inliers.
+[DEBUG] [1541531323.224188656]: libviso2 returned the following motion:
+   0.9999999   -0.0002076    0.0004759   -0.0006085 
+   0.0002063    0.9999961    0.0027962   -0.0022108 
+  -0.0004765   -0.0027961    0.9999960    0.0023768 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531323.224317113]: Changing reference frame
+[DEBUG] [1541531323.323250083]: Found 41 matches with 9 inliers.
+[DEBUG] [1541531323.323292796]: libviso2 returned the following motion:
+   0.9999731    0.0072206    0.0013042   -0.0059908 
+  -0.0072282    0.9999566    0.0058729   -0.0021255 
+  -0.0012617   -0.0058822    0.9999819    0.0111488 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531323.323425338]: Changing reference frame
+[DEBUG] [1541531323.412900281]: Call to VisualOdometryStereo::process() failed.
+[ WARN] [1541531323.412932653]: Visual Odometer got lost!
+[DEBUG] [1541531323.412950147]: Changing reference frame
+[DEBUG] [1541531323.606937680]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531323.606969534]: Changing reference frame
+[DEBUG] [1541531323.793874826]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531323.793899528]: Changing reference frame
+[DEBUG] [1541531323.996071867]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531323.996100350]: Changing reference frame
+[DEBUG] [1541531324.199419168]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531324.199451388]: Changing reference frame
+[DEBUG] [1541531324.402134799]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531324.402167075]: Changing reference frame
+[DEBUG] [1541531324.591906899]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531324.591930125]: Changing reference frame
+[DEBUG] [1541531324.814235265]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531324.814283554]: Changing reference frame
+[DEBUG] [1541531325.024477080]: Found 26 matches with 6 inliers.
+[DEBUG] [1541531325.024525142]: libviso2 returned the following motion:
+   0.9999950   -0.0000598   -0.0031704    0.0098462 
+   0.0000009    0.9998276   -0.0185706    0.0623987 
+   0.0031710    0.0185705    0.9998225    0.0033454 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531325.024629250]: Changing reference frame
+[DEBUG] [1541531325.130916151]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531325.130947571]: Changing reference frame
+[DEBUG] [1541531325.355448363]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531325.355515845]: Changing reference frame
+[DEBUG] [1541531325.619116952]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531325.619155213]: Changing reference frame
+[DEBUG] [1541531325.733487905]: Found 27 matches with 9 inliers.
+[DEBUG] [1541531325.733529532]: libviso2 returned the following motion:
+   0.9999888    0.0011240    0.0045961   -0.0025334 
+  -0.0011222    0.9999993   -0.0003999    0.0111510 
+  -0.0045965    0.0003947    0.9999894    0.0076174 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531325.733647522]: Changing reference frame
+[DEBUG] [1541531325.818353193]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531325.818381817]: Changing reference frame
+[DEBUG] [1541531326.023961155]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531326.023992151]: Changing reference frame
+[DEBUG] [1541531326.209284008]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531326.209316725]: Changing reference frame
+[DEBUG] [1541531326.407156786]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531326.407189756]: Changing reference frame
+[DEBUG] [1541531326.620820219]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531326.620864344]: Changing reference frame
+[DEBUG] [1541531326.822314868]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531326.822346231]: Changing reference frame
+[DEBUG] [1541531327.011311671]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531327.011340013]: Changing reference frame
+[DEBUG] [1541531327.216155496]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531327.216184343]: Changing reference frame
+[DEBUG] [1541531327.400060192]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531327.400100372]: Changing reference frame
+[DEBUG] [1541531327.619452171]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531327.619502436]: Changing reference frame
+[DEBUG] [1541531327.878096173]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531327.878126967]: Changing reference frame
+[DEBUG] [1541531328.048012454]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531328.048038219]: Changing reference frame
+[DEBUG] [1541531328.193757427]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531328.193824121]: Changing reference frame
+[DEBUG] [1541531328.395275182]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531328.395302783]: Changing reference frame
+[DEBUG] [1541531328.594713881]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531328.594737742]: Changing reference frame
+[DEBUG] [1541531328.824299550]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531328.824330879]: Changing reference frame
+[DEBUG] [1541531329.007367837]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531329.007432046]: Changing reference frame
+[DEBUG] [1541531329.219890754]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531329.219919991]: Changing reference frame
+[DEBUG] [1541531329.422202536]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531329.422234790]: Changing reference frame
+[DEBUG] [1541531329.622777764]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531329.622804197]: Changing reference frame
+[DEBUG] [1541531329.806051259]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531329.806080740]: Changing reference frame
+[DEBUG] [1541531330.000587082]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531330.000613278]: Changing reference frame
+[DEBUG] [1541531330.199177506]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531330.199200810]: Changing reference frame
+[DEBUG] [1541531330.424237373]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531330.424271034]: Changing reference frame
+[DEBUG] [1541531330.601341722]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531330.601364552]: Changing reference frame
+[DEBUG] [1541531330.796218765]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531330.796252542]: Changing reference frame
+[DEBUG] [1541531331.003914103]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.003944289]: Changing reference frame
+[DEBUG] [1541531331.215934929]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.215963666]: Changing reference frame
+[DEBUG] [1541531331.397809692]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.397862749]: Changing reference frame
+[DEBUG] [1541531331.609062940]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.609094165]: Changing reference frame
+[DEBUG] [1541531331.797123066]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.797150423]: Changing reference frame
+[DEBUG] [1541531331.993272039]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531331.993298212]: Changing reference frame
+[DEBUG] [1541531332.190049395]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531332.190076282]: Changing reference frame
+[DEBUG] [1541531332.390363338]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531332.390389361]: Changing reference frame
+[DEBUG] [1541531332.601196980]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531332.601226775]: Changing reference frame
+[DEBUG] [1541531332.786668785]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531332.786696744]: Changing reference frame
+[DEBUG] [1541531333.000945606]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531333.000975335]: Changing reference frame
+[DEBUG] [1541531333.200255454]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531333.200307032]: Changing reference frame
+[DEBUG] [1541531333.390135975]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531333.390169090]: Changing reference frame
+[DEBUG] [1541531333.624301039]: Call to VisualOdometryStereo::process() failed.
+[ WARN] [1541531333.624330067]: Visual Odometer got lost!
+[DEBUG] [1541531333.624340068]: Changing reference frame
+[DEBUG] [1541531333.810493130]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531333.810522504]: Changing reference frame
+[DEBUG] [1541531333.991692785]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531333.991743231]: Changing reference frame
+[DEBUG] [1541531334.187246646]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531334.187273845]: Changing reference frame
+[DEBUG] [1541531334.496111538]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531334.496139642]: Changing reference frame
+[DEBUG] [1541531334.602430689]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531334.602462163]: Changing reference frame
+[DEBUG] [1541531334.801249054]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531334.801284556]: Changing reference frame
+[DEBUG] [1541531335.220899671]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531335.220939613]: Changing reference frame
+[DEBUG] [1541531335.310300481]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531335.310332776]: Changing reference frame
+[DEBUG] [1541531335.521155851]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531335.521180892]: Changing reference frame
+[DEBUG] [1541531335.711830286]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531335.711856356]: Changing reference frame
+[DEBUG] [1541531336.283790860]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531336.283819666]: Changing reference frame
+[DEBUG] [1541531336.377727161]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531336.377758973]: Changing reference frame
+[DEBUG] [1541531336.469529802]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531336.469569525]: Changing reference frame
+[DEBUG] [1541531336.545939333]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531336.545984163]: Changing reference frame
+[DEBUG] [1541531336.976634995]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531336.976663282]: Changing reference frame
+[DEBUG] [1541531337.108463118]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.108602457]: Changing reference frame
+[DEBUG] [1541531337.214807064]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.214841478]: Changing reference frame
+[DEBUG] [1541531337.315276880]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.315303070]: Changing reference frame
+[DEBUG] [1541531337.521832159]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.521856067]: Changing reference frame
+[DEBUG] [1541531337.705988242]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.706019459]: Changing reference frame
+[DEBUG] [1541531337.948164414]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531337.948188770]: Changing reference frame
+[DEBUG] [1541531338.134656592]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531338.134682705]: Changing reference frame
+[DEBUG] [1541531338.317119886]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531338.317142202]: Changing reference frame
+[DEBUG] [1541531338.518949782]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531338.518972678]: Changing reference frame
+[DEBUG] [1541531338.729853883]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531338.729876761]: Changing reference frame
+[DEBUG] [1541531338.925218118]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531338.925240241]: Changing reference frame
+[DEBUG] [1541531339.119988045]: Found 47 matches with 8 inliers.
+[DEBUG] [1541531339.120022887]: libviso2 returned the following motion:
+   0.9999774    0.0007525    0.0066789    0.0036190 
+  -0.0007575    0.9999994    0.0007377    0.0023017 
+  -0.0066784   -0.0007427    0.9999774    0.0085913 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531339.120087511]: Changing reference frame
+[DEBUG] [1541531339.235227935]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531339.235257239]: Changing reference frame
+[DEBUG] [1541531339.441960627]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531339.441988248]: Changing reference frame
+[DEBUG] [1541531339.625270808]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531339.625301739]: Changing reference frame
+[DEBUG] [1541531339.804969578]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531339.805014018]: Changing reference frame
+[DEBUG] [1541531340.002122826]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531340.002197249]: Changing reference frame
+[DEBUG] [1541531340.203749256]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531340.203781426]: Changing reference frame
+[DEBUG] [1541531340.430328989]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531340.430353454]: Changing reference frame
+[DEBUG] [1541531340.614467961]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531340.614500847]: Changing reference frame
+[DEBUG] [1541531340.834302395]: Found 25 matches with 9 inliers.
+[DEBUG] [1541531340.834347101]: libviso2 returned the following motion:
+   0.9995518   -0.0036763   -0.0297106    0.0858712 
+   0.0038553    0.9999748    0.0059694   -0.0153735 
+   0.0296879   -0.0060813    0.9995407   -0.0384185 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531340.834413557]: Changing reference frame
+[DEBUG] [1541531340.917658069]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531340.917701680]: Changing reference frame
+[DEBUG] [1541531341.111196441]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531341.111222553]: Changing reference frame
+[DEBUG] [1541531341.300756630]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531341.300784483]: Changing reference frame
+[DEBUG] [1541531341.502146567]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531341.502176350]: Changing reference frame
+[DEBUG] [1541531341.714355963]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531341.714402607]: Changing reference frame
+[DEBUG] [1541531341.917525145]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531341.917550191]: Changing reference frame
+[DEBUG] [1541531342.118992581]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531342.119044218]: Changing reference frame
+[DEBUG] [1541531342.317513843]: Found 57 matches with 7 inliers.
+[DEBUG] [1541531342.317590689]: libviso2 returned the following motion:
+   0.9999696    0.0029933   -0.0071971    0.0155725 
+  -0.0029916    0.9999955    0.0002438    0.0092139 
+   0.0071978   -0.0002222    0.9999741   -0.0087878 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531342.317677032]: Changing reference frame
+[DEBUG] [1541531342.439318809]: Found 64 matches with 13 inliers.
+[DEBUG] [1541531342.439358712]: libviso2 returned the following motion:
+   0.9999691    0.0067395   -0.0040394    0.0040109 
+  -0.0067376    0.9999772    0.0004974   -0.0073126 
+   0.0040427   -0.0004702    0.9999917   -0.0021408 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531342.439441166]: Changing reference frame
+[DEBUG] [1541531342.567738538]: Found 51 matches with 9 inliers.
+[DEBUG] [1541531342.567786760]: libviso2 returned the following motion:
+   0.9997852    0.0140999    0.0151925   -0.0513002 
+  -0.0140175    0.9998865   -0.0055170    0.0263789 
+  -0.0152686    0.0053028    0.9998694    0.0145040 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531342.567903892]: Changing reference frame
+[DEBUG] [1541531342.622633021]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531342.622665600]: Changing reference frame
+[DEBUG] [1541531342.814984853]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531342.815010643]: Changing reference frame
+[DEBUG] [1541531343.012190126]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531343.012217578]: Changing reference frame
+[DEBUG] [1541531343.241376141]: Found 42 matches with 8 inliers.
+[DEBUG] [1541531343.241415725]: libviso2 returned the following motion:
+   0.9999017    0.0092861    0.0105052   -0.0442856 
+  -0.0093396    0.9999436    0.0050524    0.0175904 
+  -0.0104576   -0.0051500    0.9999321    0.0055925 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531343.241487529]: Changing reference frame
+[DEBUG] [1541531343.318851059]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531343.318898532]: Changing reference frame
+[DEBUG] [1541531343.516670113]: Found 43 matches with 6 inliers.
+[DEBUG] [1541531343.516738927]: libviso2 returned the following motion:
+   0.9999264    0.0078354   -0.0092595   -0.0106166 
+  -0.0080051    0.9997982   -0.0184254    0.0704630 
+   0.0091133    0.0184981    0.9997874   -0.0044451 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531343.516804762]: Changing reference frame
+[DEBUG] [1541531343.640354256]: Call to VisualOdometryStereo::process() failed.
+[ WARN] [1541531343.640376379]: Visual Odometer got lost!
+[DEBUG] [1541531343.640386506]: Changing reference frame
+[DEBUG] [1541531343.821844611]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531343.821929307]: Changing reference frame
+[DEBUG] [1541531344.024414984]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531344.024449060]: Changing reference frame
+[DEBUG] [1541531344.231750426]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531344.231774326]: Changing reference frame
+[DEBUG] [1541531344.437852247]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531344.437884070]: Changing reference frame
+[DEBUG] [1541531344.622061344]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531344.622090806]: Changing reference frame
+[DEBUG] [1541531344.855773937]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531344.855807698]: Changing reference frame
+[DEBUG] [1541531345.020406953]: Found 65 matches with 13 inliers.
+[DEBUG] [1541531345.020451276]: libviso2 returned the following motion:
+   0.9999302    0.0089983   -0.0076550    0.0035016 
+  -0.0089923    0.9999592    0.0008207    0.0077481 
+   0.0076621   -0.0007518    0.9999704    0.0007391 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531345.020575804]: Changing reference frame
+[DEBUG] [1541531345.121432501]: Found 57 matches with 6 inliers.
+[DEBUG] [1541531345.121467111]: libviso2 returned the following motion:
+   0.9998495    0.0008537   -0.0173266    0.0182705 
+  -0.0008480    0.9999996    0.0003377    0.0136883 
+   0.0173269   -0.0003230    0.9998498   -0.0064155 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531345.121645892]: Changing reference frame
+[DEBUG] [1541531345.240420594]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531345.240462694]: Changing reference frame
+[DEBUG] [1541531345.417782299]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531345.417815136]: Changing reference frame
+[DEBUG] [1541531345.605754483]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531345.605785998]: Changing reference frame
+[DEBUG] [1541531345.819930458]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531345.819958812]: Changing reference frame
+[DEBUG] [1541531346.015705517]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531346.015730968]: Changing reference frame
+[DEBUG] [1541531346.231060309]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531346.231124331]: Changing reference frame
+[DEBUG] [1541531346.444837928]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531346.444862448]: Changing reference frame
+[DEBUG] [1541531346.625263130]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531346.625293557]: Changing reference frame
+[DEBUG] [1541531346.816976321]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531346.817003950]: Changing reference frame
+[DEBUG] [1541531347.011617658]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531347.011644097]: Changing reference frame
+[DEBUG] [1541531347.203320449]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531347.203353101]: Changing reference frame
+[DEBUG] [1541531347.398774964]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531347.398798718]: Changing reference frame
+[DEBUG] [1541531347.641517236]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531347.641539840]: Changing reference frame
+[DEBUG] [1541531347.839190691]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531347.839215080]: Changing reference frame
+[DEBUG] [1541531348.034330717]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531348.034362544]: Changing reference frame
+[DEBUG] [1541531348.237909832]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531348.237933820]: Changing reference frame
+[DEBUG] [1541531348.440489000]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531348.440563385]: Changing reference frame
+[DEBUG] [1541531348.668293739]: Found 77 matches with 9 inliers.
+[DEBUG] [1541531348.668339849]: libviso2 returned the following motion:
+   0.9998693    0.0027822    0.0159287   -0.0198982 
+  -0.0035304    0.9988821    0.0471389   -0.0745589 
+  -0.0157797   -0.0471890    0.9987613    0.0154372 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531348.668410281]: Changing reference frame
+[DEBUG] [1541531348.744921526]: Found 91 matches with 7 inliers.
+[DEBUG] [1541531348.744962645]: libviso2 returned the following motion:
+   0.9996966    0.0038403   -0.0243320    0.0599300 
+  -0.0034578    0.9998701    0.0157412   -0.0358180 
+   0.0243893   -0.0156523    0.9995800   -0.0027351 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531348.745117320]: Changing reference frame
+[DEBUG] [1541531348.828751439]: Found 107 matches with 23 inliers.
+[DEBUG] [1541531348.828788730]: libviso2 returned the following motion:
+   0.9998609    0.0159635   -0.0048256    0.0060594 
+  -0.0159680    0.9998721   -0.0009097   -0.0020682 
+   0.0048104    0.0009866    0.9999879    0.0100484 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531348.828872762]: Changing reference frame
+[DEBUG] [1541531348.931444721]: Found 84 matches with 15 inliers.
+[DEBUG] [1541531348.931478203]: libviso2 returned the following motion:
+   0.9996940    0.0244401   -0.0038108    0.0010600 
+  -0.0245044    0.9995399   -0.0178725    0.0145449 
+   0.0033723    0.0179604    0.9998330    0.0091971 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531348.931596361]: Changing reference frame
+[DEBUG] [1541531349.020191383]: Found 55 matches with 6 inliers.
+[DEBUG] [1541531349.020252436]: libviso2 returned the following motion:
+   0.9999959    0.0025194   -0.0013896   -0.0005778 
+  -0.0025478    0.9997802   -0.0208086    0.0045406 
+   0.0013369    0.0208121    0.9997825    0.0153513 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531349.020331756]: Changing reference frame
+[DEBUG] [1541531349.152962374]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531349.153010763]: Changing reference frame
+[DEBUG] [1541531349.324030512]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531349.324076073]: Changing reference frame
+[DEBUG] [1541531349.533595827]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531349.533630582]: Changing reference frame
+[DEBUG] [1541531349.726510699]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531349.726541560]: Changing reference frame
+[DEBUG] [1541531349.929882092]: Found 78 matches with 14 inliers.
+[DEBUG] [1541531349.929930230]: libviso2 returned the following motion:
+   0.9999283    0.0023376    0.0117486   -0.0088081 
+  -0.0023763    0.9999918    0.0032819   -0.0042572 
+  -0.0117408   -0.0033096    0.9999256    0.0121213 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531349.929990302]: Changing reference frame
+[DEBUG] [1541531350.028730343]: Found 95 matches with 22 inliers.
+[DEBUG] [1541531350.028776063]: libviso2 returned the following motion:
+   0.9999657   -0.0063350   -0.0053397    0.0060554 
+   0.0063577    0.9999707    0.0042540   -0.0082006 
+   0.0053126   -0.0042878    0.9999767    0.0187436 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531350.028856258]: Changing reference frame
+[DEBUG] [1541531350.126669467]: Found 55 matches with 6 inliers.
+[DEBUG] [1541531350.126709820]: libviso2 returned the following motion:
+   0.9999265   -0.0082586    0.0088753    0.0014878 
+   0.0081501    0.9998925    0.0121898   -0.0174344 
+  -0.0089750   -0.0121165    0.9998863    0.0193783 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531350.126809957]: Changing reference frame
+[DEBUG] [1541531350.223425341]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531350.223464491]: Changing reference frame
+[DEBUG] [1541531350.425072606]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531350.425099765]: Changing reference frame
+[DEBUG] [1541531350.634691231]: Found 57 matches with 10 inliers.
+[DEBUG] [1541531350.634727808]: libviso2 returned the following motion:
+   0.9997637    0.0043005    0.0213102   -0.0049837 
+  -0.0044731    0.9999575    0.0080607    0.0012878 
+  -0.0212746   -0.0081541    0.9997404    0.0204754 
+   0.0000000    0.0000000    0.0000000    1.0000000 
+[DEBUG] [1541531350.634779867]: Changing reference frame
+[DEBUG] [1541531350.730067034]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531350.730089645]: Changing reference frame
+[DEBUG] [1541531350.923944950]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531350.923970773]: Changing reference frame
+[DEBUG] [1541531351.130550009]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531351.130585681]: Changing reference frame
+[DEBUG] [1541531351.320079688]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531351.320110265]: Changing reference frame
+[DEBUG] [1541531351.517722488]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531351.517751715]: Changing reference frame
+[DEBUG] [1541531351.709599390]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531351.709624577]: Changing reference frame
+[DEBUG] [1541531351.916450130]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531351.916514687]: Changing reference frame
+[DEBUG] [1541531352.115341717]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531352.115366999]: Changing reference frame
+[DEBUG] [1541531352.332728114]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531352.332758025]: Changing reference frame
+[DEBUG] [1541531352.501352722]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531352.501380431]: Changing reference frame
+[DEBUG] [1541531352.763345280]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531352.763376760]: Changing reference frame
+[DEBUG] [1541531353.001651355]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531353.001677535]: Changing reference frame
+[DEBUG] [1541531353.127313995]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531353.127340892]: Changing reference frame
+[DEBUG] [1541531353.308660772]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531353.308689894]: Changing reference frame
+[DEBUG] [1541531353.513129329]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531353.513156458]: Changing reference frame
+[DEBUG] [1541531353.713295286]: Call to VisualOdometryStereo::process() failed.
+[ WARN] [1541531353.713317328]: Visual Odometer got lost!
+[DEBUG] [1541531353.713325636]: Changing reference frame
+[DEBUG] [1541531353.919283143]: Call to VisualOdometryStereo::process() failed.
+[DEBUG] [1541531353.919304970]: Changing reference frame
+
+Thread 1 "stereo_odometer" received signal SIGSEGV, Segmentation fault.
+0x00007ffff536204c in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+(gdb) bt
+#0  0x00007ffff536204c in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#1  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#2  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#3  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#4  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#5  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#6  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#7  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#8  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#9  0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#10 0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#11 0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#12 0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+   from /home/hassan/catkin_ws/devel/lib/libviso2.so
+#13 0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+---Type <return> to continue, or q <return> to quit---
+
