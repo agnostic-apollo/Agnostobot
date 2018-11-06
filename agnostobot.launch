@@ -1,0 +1,65 @@
+<launch>
+
+
+	<param name="use_sim_time" value="false" /> 
+	<node pkg="tf" type="static_transform_publisher" name="left_camera_tf_broadcaster" args="0.1075 0.0865 0.0215 0 0 0 /base_link /agnostobot_left_camera 100" />
+	<node pkg="tf" type="static_transform_publisher" name="right_camera_tf_broadcaster" args="0.1075 -0.0865 0.0215 0 0 0 /base_link /agnostobot_right_camera 100" />
+
+	<node name="republish_left" pkg="image_transport" type="republish" output="screen" args="_image_transport:=compressed compressed in:=/agnostobot/left/image raw out:=/rectify/left/image_raw" />
+	<node name="republish_right" pkg="image_transport" type="republish" output="screen" args="_image_transport:=compressed compressed in:=/agnostobot/right/image raw out:=/rectify/right/image_raw" />
+
+
+	<!-- Run the ROS package stereo_image_proc -->
+	<group ns="rectify" >
+		<remap from="/rectify/left/camera_info" to="/agnostobot/left/camera_info"/>
+		<remap from="/rectify/right/camera_info" to="/agnostobot/right/camera_info"/>
+
+		<node name="stereo_image_proc" pkg="stereo_image_proc" type="stereo_image_proc" args="_queue_size:=100">
+		</node>
+	</group>
+
+	<node name="rectified_image_and_camera_info_message_synchronizer" pkg="message_synchronizer" type="image_and_camera_info_message_synchronizer" output="screen" />
+
+	<!-- Run the viso2_ros package -->
+	<node name="stereo_odometer" pkg="viso2_ros" type="stereo_odometer" output="screen" args="image:=image_rect" >
+			
+			<param name="queue_size" value="100" />
+
+			<!-- Matcher params -->
+			<param name="nms_n" value="3" />
+			<param name="nms_tau" value="50" />
+			<param name="match_binsize" value="50" />
+			<param name="match_radius" value="200" />
+			<param name="match_disp_tolerance" value="2" />
+			<param name="outlier_disp_tolerance" value="5" />
+			<param name="outlier_flow_tolerance" value="5" />
+			<param name="multi_stage" value="1" />
+			<param name="half_resolution" value="1" />
+			<param name="refinement" value="1" />
+
+			<!-- Bucketing params -->
+			<param name="max_features" value="2" />
+			<param name="bucket_width" value="50" />
+			<param name="bucket_height" value="50" />
+
+			<!-- Stereo params -->
+			<param name="ransac_iters" value="200" />
+			<param name="inlier_threshold" value="1.5" />
+			<param name="reweighting" value="1" />
+
+			<!-- Reference frame -->
+			<param name="ref_frame_change_method" value="0" />
+			<param name="ref_frame_motion_threshold" value="5" />
+			<param name="ref_frame_inlier_threshold" value="150" />
+	</node>
+
+	<remap from="/agnostobot/camera/image/compressed" to="/rectify/left/image_rect_color/compressed"/>
+	<remap from="/agnostobot/odom" to="/stereo_odometer/odometry"/>
+	<node name="RatSLAMLocalViewCells" pkg="ratslam_ros" type="ratslam_lv" args="$(find ratslam_ros)/config/config_agnostobot.txt _image_transport:=compressed" cwd="node" required="true" />
+	<node name="RatSLAMPoseCells" pkg="ratslam_ros" type="ratslam_pc" args="$(find ratslam_ros)/config/config_agnostobot.txt _image_transport:=compressed" cwd="node" required="true" />
+	<node name="RatSLAMExperienceMap" pkg="ratslam_ros" type="ratslam_em" args="$(find ratslam_ros)/config/config_agnostobot.txt _image_transport:=compressed" cwd="node" required="true" />
+	
+	<node pkg="rqt_plot" type="rqt_plot" name="plot_vt_em" args="/agnostobot/LocalView/Template/current_id,/agnostobot/PoseCell/TopologicalAction/dest_id" />
+	<node pkg="rosbag" type="record" name="record" args="/agnostobot/ExperienceMap/Map /agnostobot/ExperienceMap/RobotPose /agnostobot/LocalView/Template /agnostobot/PoseCell/TopologicalAction -O agnostobot_out.bag" />
+
+</launch>

@@ -1,0 +1,7 @@
+proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p2  /               ext4   defaults,noatime  0       1
+/dev/mmcblk0p1  /boot/          vfat    defaults          0       2
+UUID=c5198aed-f7ca-476b-9722-73fe075593c4 /home           ext4    defaults        0       2
+UUID=a2601ea2-f6f5-4a1e-a98d-16db66bffc96 /usr           ext4    defaults        0       2
+/var/cache/swap/swapfile    none    swap    sw    0   0
+
