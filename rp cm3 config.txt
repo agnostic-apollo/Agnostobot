@@ -1,0 +1,787 @@
+#enable touchpad
+synclient Touchpadoff=0
+
+
+
+download ubuntu-16.04-preinstalled-server-armhf+raspi3.img.xz
+move boot enable/usb slave jumper to en position
+remove usb slave 1/2/3/4 and select jumper
+compile and run rpiboot
+cd usbboot
+sudo ./rpiboot
+connect micro usb to usb slave port
+lsblk to find rpi device
+unzip -p 2017-07-05-raspbian-jessie-lite.zip 
+sudo dd if=2017-07-05-raspbian-jessie-lite.img of=/dev/sdc bs=4M conv=fsync status=progress
+unmount and reconnect rpi pi to usb port
+system-boot and cloudimg-rootfs should be mounted
+
+#to format system-boot if needed
+sudo mkfs.vfat -n system-boot /dev/sdc1
+
+sudo apt-get update
+
+#enable wifi in raspbian
+#set wifi country in raspi-config locale settitngs
+sudo ifconfig -a
+sudo iwlist wlan0 scan
+sudo vi /etc/wpa_supplicant/wpa_supplicant.conf
+#add to the bottom
+network={
+    ssid="testing"
+    psk="testingPassword"
+}
+sudo wpa_cli -i wlan0 reconfigure
+sudo ifconfig wlan0
+
+#install desktop ennvironment
+sudo apt-get update
+sudo apt-get install lxde lightdm xserver-xorg
+sudo dpkg-reconfigure lightdm
+sudo systemctl set-default graphical.target
+sudo poweroff --reboot
+#set boot to desktop in raspi-config boot options
+
+#enable ssh from raspi-config
+sudo vi /etc/ssh/sshd_config
+#add following line
+UseDns no
+sudo reboot
+
+
+#setup x11vnc
+
+#on pi
+sudo apt-get install x11vnc
+x11vnc -storepasswd
+#set resolution to dmt 16 in raspi-config advance options
+#to start x11vnc on boot use update-rc
+#create or copy x11vnc script to /etc/init.d/
+#make changes to parameters sent to the x11vnc like the port, auth, password
+#the script should run after the desktop has been set by lightdm otherwise it will fail
+#so lightdm has been added to the Required-Start to change the priority of the script
+#make script executable and enable with update-rc
+chmod 0755 /etc/init.d/x11vnc
+sudo update-rc.d x11vnc defaults
+#to remove from update-rc
+sudo update-rc.d -f x11vnc remove
+#you can confirm if correct priority has been set in the /etc/rc5.d by checking the numbers
+#the number prepended to x11vnc should be higher than lightdm script's number
+sudo reboot
+
+#you can try disabling login screen if this doesnt work, since before adding lightdm
+#to Required-Start vnc would not automatically start until pi user account was logged into using a
+#monitor
+
+#on client
+sudo apt-get install xtightvncviewer
+xtightvncviewer 192.168.0.104:6
+
+
+#format sd card as ext4
+sudo mkfs.ext4 -L sd-card /dev/sda1
+
+
+#to mount root partition
+sudo mount -t ext4 /dev/sdc2 /media/hassan/cloudimg-rootfs
+
+#to chroot into os
+sudo mount -o remount,rw /media/hassan/cloudimg-rootfs
+sudo mount -t proc none /media/hassan/cloudimg-rootfs/proc
+sudo mount -o bind /dev /media/hassan/cloudimg-rootfs/dev
+sudo rm /media/hassan/cloudimg-rootfs/etc/resolv.conf
+sudo cp /run/resolvconf/resolv.conf /media/hassan/cloudimg-rootfs/etc/
+sudo cp /usr/bin/qemu-arm-static /media/hassan/cloudimg-rootfs/usr/bin/
+sudo chroot /media/hassan/cloudimg-rootfs
+
+#compiling ros
+sudo mount -o rw /dev/sda1 /media/pi/sd-card
+cd /media/pi/sd-card/ros_catkin_ws-bash
+echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" > /etc/apt/sources.list.d/unstable.list
+sudo apt-get update
+sudo apt-get install gcc-5 cmake libboost-all-dev
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/gcc-5 -DCMAKE_CXX_COMPILER=/usr/bin/g++-5 --install-space /opt/ros/kinetic
+#std_msg will fail to compile, so use
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/gcc-8 -DCMAKE_CXX_COMPILER=/usr/bin/g++-8 --install-space /opt/ros/kinetic --pkg std_msgs
+#then revert back
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/gcc-5 -DCMAKE_CXX_COMPILER=/usr/bin/g++-5 --install-space /opt/ros/kinetic -DCATKIN_BLACKLIST_PACKAGES="std_msgs"
+
+#fuck this shit, just shift to ubuntu
+
+
+
+##########
+
+
+#install ubuntu mate, but image would not fit in cm3 with 4gb emmc
+sudo apt-get install gddrescue xz-utils
+unxz ubuntu-mate-16.04.2-desktop-armhf-raspberry-pi.img.xz
+sudo ddrescue -D --force ubuntu-mate-16.04.2-desktop-armhf-raspberry-pi.img /dev/sdx
+
+
+#setting up ubuntu mate on cm3 with home and usr partitions on an sd card with a usb sd card reader
+
+#create 2 ext4 partitions on sd card for mounting usr and home 
+#find disk number and partitions
+lsblk
+sudo parted -s /dev/sdd print
+#remove all old partitions
+parted -s /dev/sdd rm 1
+parted -s /dev/sdd rm 2
+#create 2 new partitions
+sudo parted -a opt /dev/sdd mkpart primary ext4 0% 50%
+sudo parted -a opt /dev/sdd mkpart primary ext4 50% 100%
+#format them as ext4 and change label accordingly
+sudo mkfs.ext4 -L home /dev/sdd1
+sudo mkfs.ext4 -L usr /dev/sdd2
+#mount partitions manually or replug sd card
+sudo mkdir /media/hassan/home
+sudo mkdir /media/hassan/usr
+sudo mount -t ext4 /dev/sdd1 /media/hassan/home
+sudo mount -t ext4 /dev/sdd2 /media/hassan/usr
+
+#mount raspbian image
+sudo losetup -Pf ubuntu-mate-16.04.2-desktop-armhf-raspberry-pi.img
+#PI_BOOT and PI_ROOT will be mounted
+
+#format raspberry pi's emmc system-boot and root partitions
+sudo umount /media/hassan/system-boot
+sudo mkfs.vfat -n system-boot /dev/sdc1
+sudo umount /media/hassan/cloudimg-rootfs
+sudo mkfs.ext4 -L root /dev/sdc2
+
+
+sudo rsync -avH /media/hassan/PI_BOOT/ /media/hassan/system-boot/
+sudo rsync -avH /media/hassan/PI_ROOT/ /media/hassan/root/ --exclude "/usr/" --exclude "/home/"
+sudo rsync -avH /media/hassan/PI_ROOT/home/ /media/hassan/home/
+sudo rsync -avH /media/hassan/PI_ROOT/usr/ /media/hassan/usr/
+
+
+#find UUID of home partition and modify fstab to mount sd card home partition at /home at boot
+sudo blkid /dev/sdd1
+#add line in /root/etc/fstab
+UUID=c5198aed-f7ca-476b-9722-73fe075593c4 /home           ext4    defaults        0       2
+#find UUID of usr partition and modify fstab to mount sd card usr partition at /usr at boot
+sudo blkid /dev/sdd2
+#add line in /root/etc/fstab
+UUID=a2601ea2-f6f5-4a1e-a98d-16db66bffc96 /usr           ext4    defaults        0       2
+
+
+#modify /system-boot/cmdline.txt
+#add "rootdelay=5" to give enough time for sd card usb reader to initliaze
+#remove "init=/usr/lib/raspi-config/init_resize.sh" since boot was failing
+#after changes mine looked like
+dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles rootdelay=5
+
+#once system boots, follow installation
+
+
+##########
+
+
+#enable ssh
+#on pi
+sudo systemctl enable ssh
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+sudo gedit /etc/ssh/sshd_config
+#add following line
+UseDns no
+#remove motd
+sudo chmod -x /etc/update-motd.d/*
+sudo service ssh restart
+
+
+#on client
+#generate ssh keys with ssh-keygen if not already generated
+ssh-copy-id pi@192.168.0.190
+#for home wifi
+ssh pi@192.168.0.190
+#for mobile hotspot
+ssh pi@192.168.43.118
+
+
+#########
+
+
+#setup x11vnc
+#on pi
+sudo apt-get update
+sudo apt-get install x11vnc
+x11vnc -storepasswd
+sudo gedit /etc/systemd/system/x11vnc.service
+#copy text from x11vnc.service file into this and make changes if necessary
+sudo systemctl daemon-reload
+sudo systemctl start x11vnc
+sudo systemctl enable x11vnc
+#set resolution to DMT 85 in raspi-config advance options
+sudo rasp-config,
+#incase of connection problems, like closed connection errors when switching wifi
+sudo service x11vnc restart
+
+
+#on client
+sudo apt-get install x11vnc xtightvncviewer
+#create a password file for pi's vnc to auto login
+x11vnc -storepasswd /home/hassan/.vnc/pi_passwd
+#for home wifi
+xtightvncviewer -passwd /home/hassan/.vnc/pi_passwd 192.168.0.190:6
+#for mobile hotspot
+xtightvncviewer -passwd /home/hassan/.vnc/pi_passwd pi@192.168.43.118:6
+
+
+#########
+
+
+#setup two cameras on cm3
+#Connect both cameras with Pi zero cables
+#and
+#make following jumper connections
+#GPIO0<->CD1_SDA
+#GPIO1<->CD1_SCL
+#GPIO4<->CAM1_IO1
+#GPIO5<->CAM1_IO0
+
+#and
+
+#GPIO28<->CD0_SDA
+#GPIO29<->CD0_SCL
+#GPIO30<->CAM0_IO1
+#GPIO31<->CAM0_IO0
+
+
+#for the cameras to work with the cm3 the firmware needs to be September 21st 2016 or newer. ubuntu mate and lubuntu already had it at Dec  9 2016 15:13:48. check with following command.
+vcgencmd version
+
+
+#/boot/dt-blob.bin is needed to configure pins at boot to run the cameras
+#either use precompiled dt-blob.bin available at github, but that uses pin 2 and 3 for led and shutdown respectively for cam1. But raspberry pi uses those pins for i2c if it is enabled and so the camera wont work and you might get errors like "mmal: mmal_vc_component_enable: failed to enable component: ENOSPC". You can disable i2c in /boot/config.txt by removing line "dtparam=i2c_arm=on" and the camerars will work.
+#make following jumper cable changes
+#GPIO2<->CAM1_IO1
+#GPIO3<->CAM1_IO0
+#precompiled dt-blob-dualcam.bin is available at
+https://github.com/raspberrypi/documentation/blob/master/hardware/computemodule/dt-blob-dualcam.bin
+#rename to dt-blob.bin and place it in /boot
+
+#if you also want to use i2c you can use pin 4 and 5 instead for cam1 led and shutdown by compiling dt-blob.bin from source after making changes to dt-blob-dualcam.dts which is avialable at
+https://github.com/raspberrypi/documentation/blob/master/hardware/computemodule/dt-blob-dualcam.dts
+
+#replace following lines in pins_cm3 section
+	pin@p2  { function = "output"; termination = "no_pulling"; }; // CAMERA 0 LED
+	pin@p3  { function = "output"; termination = "no_pulling"; }; // CAMERA 0 SHUTDOWN
+#with
+	pin@p4  { function = "output"; termination = "no_pulling"; }; // CAMERA 0 LED
+	pin@p5  { function = "output"; termination = "no_pulling"; }; // CAMERA 0 SHUTDOWN
+
+#and replace
+        pin_define@CAMERA_0_LED {
+          type = "internal";
+          number = <2>;
+        };
+        pin_define@CAMERA_0_SHUTDOWN {
+          type = "internal";
+          number = <3>;
+        };
+#with
+        pin_define@CAMERA_0_LED {
+          type = "internal";
+          number = <4>;
+        };
+        pin_define@CAMERA_0_SHUTDOWN {
+          type = "internal";
+          number = <5>;
+        };
+
+#compile with
+dtc -I dts -O dtb -o dt-blob.bin dt-blob-dualcam.dts
+#place in /boot
+ 
+
+#after boot run the following command to check if both cameras are detected		
+vcgencmd get_camera
+#it should return "supported=2 detected=2", if you are lucky, really lucky...
+
+#take images with cameras
+raspistill -cs 0 -o test0.jpg
+raspistill -cs 1 -o test1.jpg
+
+#calibrate stereo cameras
+#print checkboard pattern on A4 from http://wiki.ros.org/camera_calibration/Tutorials/StereoCalibration?action=AttachFile&do=view&target=check-108.pdf
+rosdep install camera_calibration
+rosmake camera_calibration
+#set stereo image publisher at 4fps and compile and run, tried with 10fps but calibrations wasn't finishing
+#then run calibrator
+rorun camera_calibration cameracalibrator.py --approximate 0.1 --size 8x6 --square 0.0235 right:=/picamera/right_image left:=/picamera/left_image
+#move the checkboard around until calibrate button lights up after x, y, scale and skew bars fill up (x and scale didn't fill up completely in my case)
+#the checkerboard is detected at the left and right edges of the field of view (X calibration)
+#the checkerboard is detected at the top and bottom edges of the field of view (Y calibration)
+#the checkerboard is detected at various angles to the camera ("Skew")
+#the checkerboard fills the entire field of view (Size calibration)
+#checkerboard tilted to the left, right, top and bottom (X,Y, and Size calibration) 
+#make sure to also tilt the chessboard both sideways and up down at the same time for skew to complete
+#press calibrate once it lights up and save
+
+
+#to read yaml file in c++ use yaml-cpp
+#download release from github, in my case it was 0.6.2
+https://github.com/jbeder/yaml-cpp/releases
+#extract in pi's filesystem and cd to it
+mkdir build
+cd build
+cmake -DBUILD_SHARED_LIBS=OFF ..
+make
+sudo make install
+sudo ldconfig
+#include in c++ #include "yaml-cpp/yaml.h"
+
+
+
+#########
+
+
+#to enable swap, this would be on emmc instead of sd-card for better performance
+#check freespace with 
+df -h
+#create 1Gb swap file
+sudo mkdir -p /var/cache/swap/
+sudo dd if=/dev/zero of=/var/cache/swap/swapfile bs=1M count=1024
+sudo chmod 0600 /var/cache/swap/swapfile
+sudo chown root:root /var/cache/swap/swapfile
+sudo mkswap /var/cache/swap/swapfile
+sudo swapon /var/cache/swap/swapfile
+#insert in /etc/fstab to enable at boot
+/var/cache/swap/swapfile    none    swap    sw    0   0
+
+#turn off swap with and remove from /etc/fstab
+sudo swapoff /var/cache/swap/swapfile
+
+
+#########
+
+
+#miscellaneous
+
+
+#Ctrl+Alt+F2 for terminal at login
+#Ctrl+Alt+F7 to close terminal
+
+#remove sudo password prompt
+sudo visudo
+#add at bottom
+pi ALL=(ALL) NOPASSWD: ALL
+#ctrl+x to exit and overwrite /etc/sudoers
+
+#add dns-server
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+
+#enable wifi
+#Also set this in Startup Application Command
+nmcli radio wifi on
+
+#restart wifi
+sudo service network-manager restart
+
+#switch wifi
+sudo nmcli c up Airport
+sudo nmcli c up Seaport
+sudo nmcli c up Anonymous
+
+#when setting static ip, set "Allow all users" in Edit Connection->General
+#otherwise wifi will network will only connect after login
+
+#disable wifi power saver
+sudo nano /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+#change wifi.powersave from 3 to 2 and reboot
+
+#restart display manager, like when black screen at boot
+sudo service lightdm restart
+
+#kill application by mouse click, press Alt+F2 and type
+xkill
+
+#disable touchpad while typing
+syndaemon -i .5 -K -t -R -d
+
+#mount pi's filesystem on client
+sftp://pi@192.168.0.190
+
+#complete live backup of ubuntu running on pi from client
+#this will only work if user pi has disabled sudo prompt, otherwise you will need to add a user with sudo access to /etc/sudoers, search online for that
+rsync -avzHhP --delete-during --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/mnt/*,/media/*,/lost+found} -e "ssh -p 22" "pi@192.168.0.190:/" "/home/hassan/Raspberry-Pi/ubuntu-mate/backup/" &> "/home/hassan/Raspberry-Pi/ubuntu-mate/backup.log"
+
+#measure temp
+vcgencmd measure_temp
+
+#install usbtop to monitor usb bus usage
+apt-get install libboost-dev libpcap-dev libboost-thread-dev libboost-system-dev
+#download usbtop from https://github.com/aguinet/usbtop/releases
+cd usbtop
+mkdir _build && cd _build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+sudo make install
+sudo modprobe usbmon
+sudo usbtop
+
+
+#synchronize time between pi and master pc
+#master ip 192.168.0.180
+#pi ip 192.168.0.190
+
+#run on both
+sudo apt-get install chrony ntdate
+
+#on master
+sudo gedit /etc/chrony/chrony.conf
+#and add following lines
+local stratum 10
+allow 192.168.0.190
+#replace pool with 
+pool 0.ubuntu.pool.ntp.org iburst
+#start chrony and enable auto start at boot
+sudo systemctl start chrony
+sudo systemctl restart chrony
+sudo systemctl enable chrony
+
+#on pi
+sudo gedit /etc/chrony/chrony.conf
+#comment any line starting with server, pool or peer and add following line
+server 192.168.0.180 minpoll 0 maxpoll 5 maxdelay .05
+#start chrony and enable auto start at boot
+sudo systemctl start chrony
+sudo systemctl restart chrony
+sudo systemctl enable chrony
+#disbale automatic time update 
+timedatectl set-ntp false
+
+
+#check time difference bwtween pi and master
+ntpdate -q 192.168.0.180
+#manual synchronization
+fbacksudo ntpdate 192.168.0.180
+
+ 
+#########
+
+
+
+#seting up raspberry pi compute 3 stereo camera ros publishing
+cd /opt
+mkdir agnostobot
+chown pi:pi -R agnostobot
+
+#install opencv2
+sudo apt-get install libopencv-dev
+
+#to install raspicam
+#gitclone or download raspicam development branch and make fixes
+cd raspicam
+gedit src/private_still/private_still_impl.cpp
+#remove line 243 to 252, redeclaration of camera_num
+#then compile
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig
+
+
+
+
+#publish stereo images from pi to laptop
+#run on master machine
+export ROS_MASTER_URI=http://192.168.0.180:11311
+export ROS_IP=192.168.0.180
+roscore
+rostopic hz /stereo/left/image_raw
+rostopic echo /stereo/left/image_raw --noarr
+
+or
+export ROS_MASTER_URI=http://192.168.43.28:11311
+export ROS_IP=192.168.43.28
+roscore
+
+#run on pi
+ssh pi@192.168.0.190
+export ROS_MASTER_URI=http://192.168.0.180:11311
+export ROS_IP=192.168.0.190
+cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
+./stereo_image_and_camera_info_publisher
+
+or
+
+ssh pi@192.168.43.118
+export ROS_MASTER_URI=http://192.168.43.28:11311
+export ROS_IP=192.168.43.118
+cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
+./stereo_image_and_camera_info_publisher
+
+rostopic echo /stereo/left/image_raw --noarr
+
+#run on master machine to rectify images
+ROS_NAMESPACE=stereo rosrun stereo_image_proc stereo_image_proc _queue_size:=100
+
+#display rectified images
+rosrun image_view stereo_view stereo:=/stereo image:=image_rect_color
+
+#run viso2_ros to publish odom messages
+rosrun viso2_ros stereo_odometer image:=image_rect _image_transport:=compressed _queue_size:=100
+
+rosrun tf view_frames && evince frames.pdf
+
+#view pose in a rqt_pose_view
+sudo apt-get install ros-kinetic-rqt_pose_view
+rqt
+#click plugins/visualization/pose view
+#click plugins/topics/topic monitor
+#drag and drop /stereo_odometer/pose
+
+source /home/hassan/catkin_ws/devel/setup.bash
+roslaunch ratslam_ros agnostobot.launch
+
+rostopic echo /stereo_odometer/odometry
+rostopic echo /stereo/right/image_rect_color --noarr
+
+rostopic echo /stereo/left/camera_info
+rostopic echo /stereo/left/image_rect/compressed --noarr
+
+rosrun image_view extract_images image:=/stereo/right/image_rect_color
+
+rosrun image_view extract_images image:=/stereo/left/image_rect _image_transport:=compressed
+rosrun image_view extract_images image:=/stereo/right/image_rect _image_transport:=compressed
+
+rosrun viso2_ros stereo_odometer image:=image_rect _queue_size:=100 _image_transport:=compressed
+
+
+rosrun image_transport republish compressed in:=/stereo/left/image_rect/compressed raw out:=/agnostobot/left/image_rect
+rosrun image_transport republish compressed in:=/stereo/right/image_rect/compressed raw out:=/agnostobot/right/image_rect
+
+ROS_NAMESPACE=agnostobot viso2_ros stereo_odometer image:=image_rect _queue_size:=100 
+
+rosrun image_view stereo_view stereo:=/rectify image:=image_rect_color _image_transport:=compressed
+
+
+rostopic echo /tf
+rosrun tf tf_echo /base_link /agnostobot_left_camera
+
+distance between cameras 17.3cm
+box length 21.5cm
+box height 4.3cm
+
+tf x=forward, y=left, z=up
+left camera tf x=0.1075, y=0.0865, z=0.0215
+right camera tf x=0.1075, y=-0.0865, z=0.0215
+
+
+#to debug node run
+ulimit -c unlimited
+#and add to node in launch file
+launch-prefix="gdb -ex run --args"
+#or
+launch-prefix="valgrind"
+
+#change log levels using gui
+rosrun rqt_logger_level rqt_logger_level
+
+
+#48 0x00007ffff5362f3f in divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) ()
+
+
+#create a package
+cd ~/catkin_ws/src
+#create package with dependencies
+catkin_create_pkg camera_message_synchronizer std_msgs rospy roscpp
+#build package
+catkin_make
+#source setup file
+source /home/hassan/catkin_ws/devel/setup.bash
+
+#check dependecies of a package
+rospack depends1 beginner_tutorials 
+
+#build specific package
+catkin_make --pkg <package A> <package B>
+cd ~/catkin_ws
+catkin_make --pkg message_synchronizer
+
+
+#arduino setup downoload and extract to ~/Arduino
+#run install.sh
+cd ~/Arduino
+./install.sh
+
+#configure port ownership
+#find user group used by dev
+ls -l /dev/ttyACM*
+#crw-rw---- 1 root dialout 188, 0 5 apr 23.01 ttyACM0
+#add our user to the group 
+sudo usermod -a -G dialout hassan
+#logout and login for changes to take effect
+
+
+#setting up rosserial-arduino
+sudo apt-get install ros-kinetic-rosserial-arduino
+sudo apt-get install ros-kinetic-rosserial
+cd ~/Arduino/libraries
+rm -rf ros_lib
+rosrun rosserial_arduino make_libraries.py .
+#restart ide
+
+
+#install pyserial
+sudo apt-get install python-pip
+pip install pyserial
+
+
+#build and install pigpio
+rm pigpio.zip
+sudo rm -rf PIGPIO
+wget abyz.me.uk/rpi/pigpio/pigpio.zip
+unzip pigpio.zip
+cd PIGPIO
+make
+sudo make install
+
+#start pigpiod
+sudo pigpiod
+
+#stop pigpiod
+sudo killall pigpiod
+
+#setting up wifi bridge
+#connect to extension router at 192.168.0.1
+#set lan ip 192.168.43.138 and reboot, the ip should be in subnet of root router	 
+#connect to extension router and login at 192.168.43.138
+#Enable WDS Bridging and connect to wifi using survey and make sure channels are same and reboot
+#connct to root wifi and login at 192.168.43.138 and disable dhcp and reboot
+#reconnect to extension router
+
+#to revert enable dhcp, diable wifi wds bridge and set lan ip to 192.168.0.1
+
+
+
+
+
+
+
+
+
+#github
+ssh-keygen -t rsa -b 4096 -C "agnosticapollo@gmail.com"
+#create at /home/hassan/.ssh/agnosticapollo_rsa
+add /home/hassan/.ssh/agnosticapollo_rsa.pub ssh key in github settings
+
+git config --global user.name "agnostic-apollo"
+git config --global user.email "agnosticapollo@gmail.com"
+git init
+git add -A && git commit -m "Initial commit"
+git remote add origin git@github.com:agnostic-apollo/Agnostobot.git
+git push -u origin master
+git add -A && git commit -m "Added motor_controller and info on setting up pi"
+git push -u origin master
+
+
+
+
+
+
+
+
+
+
+
+Hi, I am building a SLAM robot using RatSLAM and was thinking about integrating stereo viso2 odometry into it but I am getting segmentation faults at the function divconqrecurse(mesh*, behavior*, float**, int, int, otri*, otri*) (), the gdb backtrace shows a dozen divconqrecurse function calls. Can you check this out?
+
+
+
+Log file:
+file:///home/hassan/log.txt
+
+
+
+My setup is Raspberry Pi Compute Module 3 running Ubuntu 16.04, ROS kinetic with stereo v1.3 Cameras each taking 640x480 images at 10fps using raspicam lib. The images are sent to my laptop running Ubuntu 16.04, ROS Kinetic over a LAN Wi-Fi connection.
+The bgr8 images are first encoded to jpeg before transfer to reduce transfer time.
+
+
+The Pi publishes
+
+sensor_msgs/CompressedImage at 
+/agnostobot/left/image/compressed
+/agnostobot/right/image/compressed
+
+and
+
+sensor_msgs/CameraInfo at
+/agnostobot/left/camera_info
+/agnostobot/right/camera_info
+
+
+The images are then converted back to raw using image_transport
+and published at
+
+/rectify/left/image_raw
+/rectify/right/image_raw
+
+camera_info messages are remapped to
+
+/rectify/left/camera_info
+/rectify/right/camera_info
+
+
+stereo_image_proc is used to rectify the images. Then ExactTime policy is used to synchronize rectified images and camera_info messages and republish them for viso2_ros stereo_odometer. This was done since camera_info messages were delivered to viso2 earlier than image messages which were still being rectified.
+
+images are published at
+
+/stereo/left/image_rect
+/stereo/right/image_rect
+
+and camera_info at 
+
+/stereo/left/camera_info
+stereo/right/camera_info
+
+
+the left camera image and camera_info message header frame_id are set at
+
+/agnostobot_left_camera
+
+and the right camera image and camera_info message header frame_id are set at
+
+/agnostobot_right_camera
+
+
+static_transform_publisher with args="0.1075 0.0865 0.0215 0 0 0 /base_link /agnostobot_left_camera 100" is used to provide transform from  /base_link -> /agnostobot_left_camera
+
+static_transform_publisher with args="0.1075 -0.0865 0.0215 0 0 0 /base_link /agnostobot_right_camera 100" is used to provide transform from  /base_link -> /agnostobot_right_camera
+
+im also using chrony server on the laptop which is used by the pi for syncing time since that was being a problem too with "future transform" errors.
+
+possible issues but could be unrelated
+1) my tf coordinate frames are not optical frame, my x is forward, y is left and z is up which is not what viso2 want but im new to tf and not sure how to merge both logics.
+
+2) another issue is that im encoding and decoding before rectification, that shouldn't be an issue, right?
+
+3) my robot is not built yet, I was just moving my raspberry pi case mounted with cameras around the room, i expect to get false or no odometry data but not for the lib to crash  
+
+4) whats this about, the parameter isn't mentioned in the docs
+'stereo' has not been remapped! Example command-line usage:
+	$ rosrun viso2_ros stereo_odometer stereo:=narrow_stereo image:=image_rect
+
+
+If you need any more info, let me know. Also let me know if I'm making any mistakes here. Waiting for your response.
+Thanks
+
+Links:
+
+[pi camera image publisher!](https://github.com/agnostic-apollo/Agnostobot/blob/master/StereoCompressedImageAndCameraInfoPublisher/stereo_compressed_image_and_camera_info_publisher.cpp)
+[launch file](https://github.com/agnostic-apollo/Agnostobot/blob/master/agnostobot.launch)
+[message synchonizer](https://github.com/agnostic-apollo/Agnostobot/blob/master/message_synchronizer/src/image_and_camera_info_message_synchronizer.cpp)
+
+
+
+
+
+
+
+
