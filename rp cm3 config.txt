@@ -674,13 +674,15 @@ add /home/hassan/.ssh/agnosticapollo_rsa.pub ssh key in github settings
 
 git config --global user.name "agnostic-apollo"
 git config --global user.email "agnosticapollo@gmail.com"
+cd /home/hassan/catkin_ws/agnostobot
 git init
 git add -A && git commit -m "Initial commit"
 git remote add origin git@github.com:agnostic-apollo/Agnostobot.git
 git push -u origin master
 git add -A && git commit -m "Added motor_controller and info on setting up pi"
 git push -u origin master
-
+git add -A && git commit -m "renamed motor_controller to agnostobot_controller and divided stuff into classes"
+git push -u origin master
 
 
 
