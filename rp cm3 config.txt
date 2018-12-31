@@ -508,7 +508,7 @@ export ROS_MASTER_URI=http://192.168.0.180:11311
 export ROS_IP=192.168.0.190
 cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
 ./stereo_image_and_camera_info_publisher
-
+roslaunch ros_arduino_python arduino.launch
 or
 
 ssh pi@192.168.43.118
@@ -516,6 +516,8 @@ export ROS_MASTER_URI=http://192.168.43.28:11311
 export ROS_IP=192.168.43.118
 cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
 ./stereo_image_and_camera_info_publisher
+roslaunch ros_arduino_python arduino.launch
+
 
 rostopic echo /stereo/left/image_raw --noarr
 
@@ -683,7 +685,7 @@ git add -A && git commit -m "Added motor_controller and info on setting up pi"
 git push -u origin master
 git add -A && git commit -m "renamed motor_controller to agnostobot_controller and divided stuff into classes"
 git push -u origin master
-
+git add -A && git commit -m "added ros_arduino_bridge with support for just encoder_controller that workes without base_controller's motor and pid control to transmit encoder ticks from arduino to pi and publish odom"
 
 
 

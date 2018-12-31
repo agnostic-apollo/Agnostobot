@@ -1,0 +1,5 @@
+<launch>
+   <node name="encoder_controller" pkg="ros_arduino_python" type="arduino_node.py" output="screen">
+      <rosparam file="$(find ros_arduino_python)/config/arduino_params.yaml" command="load" />
+   </node>
+</launch>
