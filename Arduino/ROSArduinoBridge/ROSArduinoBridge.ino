@@ -45,12 +45,42 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+//currently agnostobot uses arduino uno for encoder data reading 
+//and arduino mega for controlling ultrasonic sensors and servos
+//the "#if defined(ARDUINO_AVR_UNO)" and "#elif defined(ARDUINO_AVR_MEGA2560)"
+//allows that ENCODER_DRIVER, USE_SERVOS and USE_RANGE_SENSOR 
+//are defined according to the board the code is being upload to
+//so that same code can be used on both without making changes to define statements
+
+
+
+
 //#define USE_BASE      // Enable the base controller code
 #undef USE_BASE     // Disable the base controller code
 
+#if defined(ARDUINO_AVR_UNO)
+//Uno specific code
 //if you only want to use encoder without motor driver and pid control then use this
 #define ENCODER_DRIVER      // Enable the encoder controller code
 //#undef ENCODER_DRIVER     // Disable the encoder controller code
+
+
+#elif defined(ARDUINO_AVR_MEGA2560)
+//Mega 2560 specific code
+#define USE_SERVOS  // Enable use of PWM servos as defined in servos.h
+//#undef USE_SERVOS     // Disable use of PWM servos
+
+#define USE_RANGE_SENSOR  // Enable use of range sensors as defined in range_sensor.h
+//#undef USE_RANGE_SENSOR     // Disable use of range sensors
+
+
+#elif defined(ARDUINO_SAM_DUE)
+//Due specific code
+#else
+#error Unsupported hardware
+#endif
+
+
 
 #define SERIAL_STREAM Serial
 #define DEBUG_SERIAL_STREAM Serial
@@ -93,8 +123,10 @@
 
 #endif
 
-//#define USE_SERVOS  // Enable use of PWM servos as defined in servos.h
-#undef USE_SERVOS     // Disable use of PWM servos
+#ifdef USE_RANGE_SENSOR
+   /* The serial US100 ultrasonic sensors */
+   #define USE_SERIAL_US100
+#endif
 
 /* Serial port baud rate */
 #define BAUDRATE     57600
@@ -129,6 +161,15 @@
    #include <Servo.h>
    #include "servos.h"
 #endif
+
+#ifdef USE_RANGE_SENSOR
+  #ifdef USE_SERIAL_US100
+    #include <PingSerial.h>
+    #include <SoftwareSerial.h>
+    #include "range_sensor.h"
+  #endif
+#endif
+
 
 #ifdef USE_BASE
   /* Motor driver function definitions */
@@ -302,6 +343,20 @@ int runCommand() {
     break;
 #endif
 
+#ifdef USE_RANGE_SENSOR
+    #ifdef USE_SERIAL_US100
+      case RANGE_SENSOR_REQUEST:
+        if (arg2 == 0) serial_us100_range_sensors[arg1].request_distance();
+        else if (arg2 == 1) serial_us100_range_sensors[arg1].request_temperature();
+        SERIAL_STREAM.println("OK");
+        break;
+      case RANGE_SENSOR_GET:
+        if (arg2 == 0) SERIAL_STREAM.println(serial_us100_range_sensors[arg1].get_distance());
+        else if (arg2 == 1) SERIAL_STREAM.println(serial_us100_range_sensors[arg1].get_temperature());
+        break;
+    #endif
+#endif
+
 #if defined(USE_BASE) || defined(ENCODER_DRIVER)
   case READ_ENCODERS:
     SERIAL_STREAM.print(readEncoder(LEFT));
@@ -351,35 +406,48 @@ int runCommand() {
 
 /* Setup function--runs once at startup. */
 void setup() {
-#ifdef USE_I2C
-  initI2c();
-#endif
+  #ifdef USE_I2C
+    initI2c();
+  #endif
 
   SERIAL_STREAM.begin(BAUDRATE);
   while (!SERIAL_STREAM) {
     // do nothing
   }
 
-// Initialize the encoder and motor controller if used */
+  // Initialize the encoder and motor controller if used */
 
-#if defined(USE_BASE) || defined(ENCODER_DRIVER)
-  initEncoder();
-#endif
+  #if defined(USE_BASE) || defined(ENCODER_DRIVER)
+    initEncoder();
+  #endif
 
-#ifdef USE_BASE
-  initMotorController();
-  resetPID();
-#endif
+  #ifdef USE_BASE
+    initMotorController();
+    resetPID();
+  #endif
 
 /* Attach servos if used */
   #ifdef USE_SERVOS
-    int i;
-    for (i = 0; i < N_SERVOS; i++) {
+    for (int i = 0; i < N_SERVOS; i++) {
       servos[i].initServo(
           servoPins[i],
           stepDelay[i],
           servoInitPosition[i]);
     }
+  #endif
+
+  /* Attach range sensors if used */
+  #ifdef USE_RANGE_SENSOR
+    #ifdef USE_SERIAL_US100
+      for (int i = 0; i < N_SERIAL_US100_RANGE_SENSORS; i++) {
+        serial_us100_range_sensors[i].initRangeSensor(
+            serial_us100_param1[i],
+            serial_us100_param2[i],
+            serial_us100_serial_type[i],
+            serial_us100_min_mm_distance[i],
+            serial_us100_max_mm_distance[i]);
+      }
+    #endif
   #endif
 }
 
@@ -428,30 +496,30 @@ void loop() {
     }
   }
 
-#ifdef USE_I2C
-  runI2c();
-#endif
+  #ifdef USE_I2C
+    runI2c();
+  #endif
 
-// If we are using base control, run a PID calculation at the appropriate intervals
-#ifdef USE_BASE
-  if (millis() > nextPID) {
-    updatePID();
-    nextPID += PID_INTERVAL;
-  }
+  // If we are using base control, run a PID calculation at the appropriate intervals
+  #ifdef USE_BASE
+    if (millis() > nextPID) {
+      updatePID();
+      nextPID += PID_INTERVAL;
+    }
 
-  // Check to see if we have exceeded the auto-stop interval
-  if ((millis() - lastMotorCommand) > AUTO_STOP_INTERVAL) {;
-    setMotorSpeeds(0, 0);
-    moving = 0;
-  }
-#endif
+    // Check to see if we have exceeded the auto-stop interval
+    if ((millis() - lastMotorCommand) > AUTO_STOP_INTERVAL) {;
+      setMotorSpeeds(0, 0);
+      moving = 0;
+    }
+  #endif
 
-// Sweep servos
-#ifdef USE_SERVOS
-  int i;
-  for (i = 0; i < N_SERVOS; i++) {
-    servos[i].doSweep();
-  }
-#endif
+  // Sweep servos
+  #ifdef USE_SERVOS
+    int i;
+    for (i = 0; i < N_SERVOS; i++) {
+      servos[i].doSweep();
+    }
+  #endif
 }
 

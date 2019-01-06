@@ -508,7 +508,12 @@ export ROS_MASTER_URI=http://192.168.0.180:11311
 export ROS_IP=192.168.0.190
 cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
 ./stereo_image_and_camera_info_publisher
+
+ssh pi@192.168.0.190
+export ROS_MASTER_URI=http://192.168.0.180:11311
+export ROS_IP=192.168.0.190
 roslaunch ros_arduino_python arduino.launch
+
 or
 
 ssh pi@192.168.43.118
@@ -516,6 +521,10 @@ export ROS_MASTER_URI=http://192.168.43.28:11311
 export ROS_IP=192.168.43.118
 cd /opt/agnostobot/StereoImageAndCameraInfoPublisher
 ./stereo_image_and_camera_info_publisher
+
+ssh pi@192.168.43.118
+export ROS_MASTER_URI=http://192.168.43.28:11311
+export ROS_IP=192.168.43.118
 roslaunch ros_arduino_python arduino.launch
 
 
@@ -567,6 +576,8 @@ rosrun image_view stereo_view stereo:=/rectify image:=image_rect_color _image_tr
 rostopic echo /tf
 rosrun tf tf_echo /base_link /agnostobot_left_camera
 
+rosparam list
+rosparam get /
 distance between cameras 17.3cm
 box length 21.5cm
 box height 4.3cm
@@ -686,8 +697,9 @@ git push -u origin master
 git add -A && git commit -m "renamed motor_controller to agnostobot_controller and divided stuff into classes"
 git push -u origin master
 git add -A && git commit -m "added ros_arduino_bridge with support for just encoder_controller that workes without base_controller's motor and pid control to transmit encoder ticks from arduino to pi and publish odom"
-
-
+git push -u origin master
+git add -A && git commit -m "added ros_arduino_bridge with support for us100 ultrasonic sensors and modified PingSerial library to work with it, also added test codes"
+git push -u origin master
 
 
 

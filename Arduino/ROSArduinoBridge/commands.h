@@ -10,6 +10,8 @@
 #define PIN_MODE       'c'
 #define DIGITAL_READ   'd'
 #define READ_ENCODERS  'e'
+#define RANGE_SENSOR_REQUEST  'f'
+#define RANGE_SENSOR_GET  'g'
 #define MOTOR_SPEEDS   'm'
 #define PING           'p'
 #define RESET_ENCODERS 'r'

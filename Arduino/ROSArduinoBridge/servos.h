@@ -2,7 +2,7 @@
 #define SERVOS_H
 
 
-#define N_SERVOS 2
+#define N_SERVOS 8
 
 // This delay in milliseconds determines the pause 
 // between each one degree step the servo travels.  Increasing 
@@ -13,10 +13,10 @@
 int stepDelay [N_SERVOS] = { 0, 0 }; // ms
 
 // Pins
-byte servoPins [N_SERVOS] = { 3, 4 };
+byte servoPins [N_SERVOS] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 
 // Initial Position
-byte servoInitPosition [N_SERVOS] = { 90, 90 }; // [0, 180] degrees
+byte servoInitPosition [N_SERVOS] = { 90, 90, 90, 90, 90, 90, 90, 90 }; // [0, 180] degrees
 
 
 class SweepServo
